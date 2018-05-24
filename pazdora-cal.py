@@ -27,7 +27,7 @@ def generate_drops(height, width):
 ##============= カスタムフィールド==============##
 
 ## 試行回数を指定
-roop_cnt = 100000
+loop_cnt = 100000
 
 ## 盤面を指定
 height = 5
@@ -39,7 +39,7 @@ width = 6
 def monte_carlo_freq(lack_cond):
     num_ok = 0
     num_ng = 0
-    for x in range(roop_cnt):
+    for x in range(loop_cnt):
         drops = generate_drops(height,width)
         if check_normal_drops(drops) == False:
             continue
@@ -79,6 +79,8 @@ drops = generate_drops(height,width)
 while check_normal_drops(drops) == False:
     drops = generate_drops(height,width)
 print(drops)
+
+print("総試行回数は" + str(loop_cnt) + "回")
 
 ## 2色いずれか5個以上ある確率
 print("=========================")
@@ -168,4 +170,28 @@ print_prob(num_ok, num_ng)
 print("=========================")
 print("10コンボ以上ある確率")
 num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 3) + (b // 3) + (g // 3) + (l // 3) + (d // 3) + (r // 3) <= 9)
+print_prob(num_ok, num_ng)
+
+## 11コンボ以上ある確率
+print("=========================")
+print("11コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 3) + (b // 3) + (g // 3) + (l // 3) + (d // 3) + (r // 3) <= 10)
+print_prob(num_ok, num_ng)
+
+## 12コンボ以上ある確率
+print("=========================")
+print("12コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 3) + (b // 3) + (g // 3) + (l // 3) + (d // 3) + (r // 3) <= 11)
+print_prob(num_ok, num_ng)
+
+## 13コンボ以上ある確率
+print("=========================")
+print("13コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 3) + (b // 3) + (g // 3) + (l // 3) + (d // 3) + (r // 3) <= 12)
+print_prob(num_ok, num_ng)
+
+## 14コンボ以上ある確率
+print("=========================")
+print("14コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 3) + (b // 3) + (g // 3) + (l // 3) + (d // 3) + (r // 3) <= 13)
 print_prob(num_ok, num_ng)
