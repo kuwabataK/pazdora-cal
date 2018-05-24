@@ -30,7 +30,7 @@ def generate_drops(height, width):
 roop_cnt = 100000
 
 ## 盤面を指定
-height = 7
+height = 5
 width = 6
 
 ##=============================================##
@@ -144,4 +144,28 @@ print_prob(num_ok, num_ng)
 print("=========================")
 print("指定一色が4個以上ある確率(進化前リーチェ)")
 num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: f <= 3)
+print_prob(num_ok, num_ng)
+
+## 7コンボ以上ある確率
+print("=========================")
+print("7コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 3) + (b // 3) + (g // 3) + (l // 3) + (d // 3) + (r // 3) <= 6)
+print_prob(num_ok, num_ng)
+
+## 8コンボ以上ある確率
+print("=========================")
+print("8コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 3) + (b // 3) + (g // 3) + (l // 3) + (d // 3) + (r // 3) <= 7)
+print_prob(num_ok, num_ng)
+
+## 9コンボ以上ある確率
+print("=========================")
+print("9コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 3) + (b // 3) + (g // 3) + (l // 3) + (d // 3) + (r // 3) <= 8)
+print_prob(num_ok, num_ng)
+
+## 10コンボ以上ある確率
+print("=========================")
+print("10コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 3) + (b // 3) + (g // 3) + (l // 3) + (d // 3) + (r // 3) <= 9)
 print_prob(num_ok, num_ng)
