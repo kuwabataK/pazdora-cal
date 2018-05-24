@@ -30,7 +30,7 @@ def generate_drops(height, width):
 loop_cnt = 100000
 
 ## 盤面を指定
-height = 5
+height = 7
 width = 6
 
 ##=============================================##
@@ -194,4 +194,40 @@ print_prob(num_ok, num_ng)
 print("=========================")
 print("14コンボ以上ある確率")
 num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 3) + (b // 3) + (g // 3) + (l // 3) + (d // 3) + (r // 3) <= 13)
+print_prob(num_ok, num_ng)
+
+## (4個消しで)5コンボ以上ある確率
+print("=========================")
+print("(4個消しで)5コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 4) + (b // 4) + (g // 4) + (l // 4) + (d // 4) + (r // 4) <= 4)
+print_prob(num_ok, num_ng)
+
+## (4個消しで)6コンボ以上ある確率
+print("=========================")
+print("(4個消しで)6コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 4) + (b // 4) + (g // 4) + (l // 4) + (d // 4) + (r // 4) <= 5)
+print_prob(num_ok, num_ng)
+
+## (4個消しで)7コンボ以上ある確率
+print("=========================")
+print("(4個消しで)7コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 4) + (b // 4) + (g // 4) + (l // 4) + (d // 4) + (r // 4) <= 6)
+print_prob(num_ok, num_ng)
+
+## (4個消しで)8コンボ以上ある確率
+print("=========================")
+print("(4個消しで)8コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 4) + (b // 4) + (g // 4) + (l // 4) + (d // 4) + (r // 4) <= 7)
+print_prob(num_ok, num_ng)
+
+## (4個消しで)9コンボ以上ある確率
+print("=========================")
+print("(4個消しで)9コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 4) + (b // 4) + (g // 4) + (l // 4) + (d // 4) + (r // 4) <= 8)
+print_prob(num_ok, num_ng)
+
+## (4個消しで)10コンボ以上ある確率
+print("=========================")
+print("(4個消しで)10コンボ以上ある確率")
+num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: (f // 4) + (b // 4) + (g // 4) + (l // 4) + (d // 4) + (r // 4) <= 9)
 print_prob(num_ok, num_ng)
