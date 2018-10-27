@@ -5,20 +5,15 @@ def check_normal_drops (drops):
     ## ドロップが3つ以上つながっているかどうかをチェックする
     for idx_i, val_i in enumerate(drops):
         for idx_j, val_j in enumerate(val_i):
-            if val_j == val_i[idx_j + 1] and val_i[idx_j + 1] == val_i[idx_j + 2]:
-                return False
-            if idx_j + 3 >= len(val_i):
-                break
 
-## 配列を逆転して再度計算
-    drops = list(map(list, zip(*drops)))
+            if idx_j + 2 < len(val_i):
+                if val_j == val_i[idx_j + 1] and val_i[idx_j + 1] == val_i[idx_j + 2]:
+                    return False
+            
+            if idx_i + 2 < len(drops):
+                if val_j == drops[idx_i + 1][idx_j] and val_j == drops[idx_i + 2][idx_j]:
+                    return False
 
-    for idx_i, val_i in enumerate(drops):
-        for idx_j, val_j in enumerate(val_i):
-            if val_j == val_i[idx_j + 1] and val_i[idx_j + 1] == val_i[idx_j + 2]:
-                return False
-            if idx_j + 3 >= len(val_i):
-                break
     return True
 
 def generate_drops(height, width):
@@ -30,7 +25,7 @@ def generate_drops(height, width):
 loop_cnt = 100000
 
 ## 盤面を指定
-height = 7
+height = 5
 width = 6
 
 ##=============================================##
@@ -108,6 +103,7 @@ print_prob(num_ok, num_ng)
 
 ## 指定同色2コンボがある確率
 print("=========================")
+print("指定同色2コンボ(6個)がある確率")
 num_ok, num_ng = monte_carlo_freq(lambda f, b, g, l, d, r: f <= 5)
 print_prob(num_ok, num_ng)
 
