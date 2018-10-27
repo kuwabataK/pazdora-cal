@@ -2,6 +2,7 @@ package main
 
 import (
 	crand "crypto/rand"
+	"flag"
 	"fmt"
 	"math"
 	"math/big"
@@ -12,53 +13,140 @@ import (
 
 func main() {
 
-	num_ok, num_ng, x_range, y_range := 0, 0, 0, 0
+	x := flag.Int("x", 5, "盤面の縦方向の大きさ")
+	y := flag.Int("y", 6, "盤面の横方向の大きさ")
+	l := flag.Int("loopCnt", 100000, "ループする回数")
+	flag.Parse()
+	x_range := *x
+	y_range := *y
+	loop_cnt := *l
 
-	num_ok, num_ng, x_range, y_range = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+	num_ok, num_ng := 0, 0
+
+	field := generate_fields(x_range, y_range, loop_cnt)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
 		return f >= 5 || d >= 5
-	})
+	}, field)
 	print_prob(num_ok, num_ng, "2色いずれかが5色以上ある確率", x_range, y_range)
 
-	num_ok, num_ng, x_range, y_range = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
 		return f >= 3 && d >= 3
-	})
+	}, field)
 	print_prob(num_ok, num_ng, "指定2色がある確率", x_range, y_range)
 
-	num_ok, num_ng, x_range, y_range = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
 		array := []int{f, b, g, l, d, r}
 		sort.Ints(array)
 		return array[1] >= 3
-	})
+	}, field)
 	print_prob(num_ok, num_ng, "6色のうち5色がある確率", x_range, y_range)
 
-	num_ok, num_ng, x_range, y_range = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
 		array := []int{f, b, g, l, d}
 		sort.Ints(array)
 		return array[1] >= 3
-	})
+	}, field)
 	print_prob(num_ok, num_ng, "5色のうち4色がある確率", x_range, y_range)
 
-	num_ok, num_ng, x_range, y_range = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
 		return f >= 6
-	})
+	}, field)
 	print_prob(num_ok, num_ng, "指定色が6個以上ある確率(ヨグとか)", x_range, y_range)
 
-	num_ok, num_ng, x_range, y_range = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
 		return f >= 3
-	})
+	}, field)
 	print_prob(num_ok, num_ng, "指定色が3個以上ある確率", x_range, y_range)
 
-	num_ok, num_ng, x_range, y_range = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
 		return f >= 5
-	})
+	}, field)
 	print_prob(num_ok, num_ng, "指定色が5個以上ある確率", x_range, y_range)
 
-	num_ok, num_ng, x_range, y_range = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
 		array := []int{f, b, g, l, d, r}
 		sort.Ints(array)
 		return array[0] >= 3
-	})
+	}, field)
 	print_prob(num_ok, num_ng, "全色ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		array := []int{f, b, g, l, d}
+		sort.Ints(array)
+		return array[0] >= 3
+	}, field)
+	print_prob(num_ok, num_ng, "ガードブレイクが発動できる確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return f >= 8
+	}, field)
+	print_prob(num_ok, num_ng, "指定一色が8個以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return f >= 4
+	}, field)
+	print_prob(num_ok, num_ng, "指定一色が4個以上ある確率 進化前リーチェ", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/3)+(b/3)+(g/3)+(l/3)+(d/3)+(r/3) >= 7
+	}, field)
+	print_prob(num_ok, num_ng, "7コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/3)+(b/3)+(g/3)+(l/3)+(d/3)+(r/3) >= 8
+	}, field)
+	print_prob(num_ok, num_ng, "8コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/3)+(b/3)+(g/3)+(l/3)+(d/3)+(r/3) >= 9
+	}, field)
+	print_prob(num_ok, num_ng, "9コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/3)+(b/3)+(g/3)+(l/3)+(d/3)+(r/3) >= 10
+	}, field)
+	print_prob(num_ok, num_ng, "10コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/3)+(b/3)+(g/3)+(l/3)+(d/3)+(r/3) >= 11
+	}, field)
+	print_prob(num_ok, num_ng, "11コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/3)+(b/3)+(g/3)+(l/3)+(d/3)+(r/3) >= 12
+	}, field)
+	print_prob(num_ok, num_ng, "12コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/3)+(b/3)+(g/3)+(l/3)+(d/3)+(r/3) >= 13
+	}, field)
+	print_prob(num_ok, num_ng, "13コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/3)+(b/3)+(g/3)+(l/3)+(d/3)+(r/3) >= 14
+	}, field)
+	print_prob(num_ok, num_ng, "14コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/4)+(b/4)+(g/4)+(l/4)+(d/4)+(r/4) >= 7
+	}, field)
+	print_prob(num_ok, num_ng, "(4個消しで)7コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/4)+(b/4)+(g/4)+(l/4)+(d/4)+(r/4) >= 8
+	}, field)
+	print_prob(num_ok, num_ng, "(4個消しで)8コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/4)+(b/4)+(g/4)+(l/4)+(d/4)+(r/4) >= 9
+	}, field)
+	print_prob(num_ok, num_ng, "(4個消しで)9コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/4)+(b/4)+(g/4)+(l/4)+(d/4)+(r/4) >= 10
+	}, field)
+	print_prob(num_ok, num_ng, "(4個消しで)10コンボ以上ある確率", x_range, y_range)
 
 }
 
@@ -117,26 +205,19 @@ func cnt_drops(target_num int, drops [][]int) int {
 }
 
 func monte_carlo_freq(fn func(fire_drops_num int, blue_drops_num int, green_drops_num int,
-	light_drops_num int, black_drops_num int, recovery_drops_num int) bool) (int, int, int, int) {
+	light_drops_num int, black_drops_num int, recovery_drops_num int) bool, field [][][]int) (int, int) {
 
-	loop_cnt := 100000
-	x_range := 5
-	y_range := 6
 	num_ok := 0
 	num_ng := 0
 
-	for i := 0; i < loop_cnt; i++ {
-		drops := generate_drops(x_range, y_range)
-		if !check_normal_drops(drops) {
-			continue
-		}
+	for i := range field {
 
-		f_num := cnt_drops(0, drops)
-		blu_num := cnt_drops(1, drops)
-		g_num := cnt_drops(2, drops)
-		l_num := cnt_drops(3, drops)
-		bla_num := cnt_drops(4, drops)
-		r_num := cnt_drops(5, drops)
+		f_num := cnt_drops(0, field[i])
+		blu_num := cnt_drops(1, field[i])
+		g_num := cnt_drops(2, field[i])
+		l_num := cnt_drops(3, field[i])
+		bla_num := cnt_drops(4, field[i])
+		r_num := cnt_drops(5, field[i])
 
 		if fn(f_num, blu_num, g_num, l_num, bla_num, r_num) {
 			num_ok++
@@ -146,7 +227,23 @@ func monte_carlo_freq(fn func(fire_drops_num int, blue_drops_num int, green_drop
 
 	}
 
-	return num_ok, num_ng, x_range, y_range
+	return num_ok, num_ng
+
+}
+
+func generate_fields(x_range int, y_range int, loop_cnt int) [][][]int {
+
+	field := make([][][]int, 0, loop_cnt/2)
+
+	for i := 0; i < loop_cnt; i++ {
+		drops := generate_drops(x_range, y_range)
+		if !check_normal_drops(drops) {
+			continue
+		}
+		field = append(field, drops)
+	}
+
+	return field
 
 }
 
@@ -158,7 +255,6 @@ func print_prob(num_ok int, num_ng int, message string, x int, y int) {
 	fmt.Println("試行回数は" + strconv.Itoa(num_ok+num_ng))
 	fmt.Println("成功した回数は" + strconv.Itoa(num_ok))
 	fmt.Println("失敗した回数は" + strconv.Itoa(num_ng))
-	fmt.Println("確率は")
 	kakuritu := float64(num_ok) / float64(num_ng+num_ok) * 100
-	fmt.Println(kakuritu)
+	fmt.Println("確率は" + strconv.FormatFloat(kakuritu, 'f', 10, 64))
 }
