@@ -1,0 +1,17 @@
+## python
+
+loop_cnt 1000000
+試行回数は379994
+
+real    3m55.998s
+user    3m55.015s
+sys     0m0.535s
+
+## go
+
+lopp_cnt 1000000
+試行回数は379768
+
+real    0m13.208s
+user    0m12.850s
+sys     0m0.685s
