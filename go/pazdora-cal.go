@@ -189,13 +189,13 @@ func generate_drops(x int, y int) [][]int {
 	return drops
 }
 
-func cnt_drops(target_num int, drops [][]int) int {
+func cnt_drops(target_drop int, drops [][]int) int {
 
 	total := 0
 
 	for i := range drops {
 		for j := range drops[i] {
-			if drops[i][j] == target_num {
+			if drops[i][j] == target_drop {
 				total++
 			}
 		}
@@ -205,19 +205,19 @@ func cnt_drops(target_num int, drops [][]int) int {
 }
 
 func monte_carlo_freq(fn func(fire_drops_num int, blue_drops_num int, green_drops_num int,
-	light_drops_num int, black_drops_num int, recovery_drops_num int) bool, field [][][]int) (int, int) {
+	light_drops_num int, black_drops_num int, recovery_drops_num int) bool, fields [][][]int) (int, int) {
 
 	num_ok := 0
 	num_ng := 0
 
-	for i := range field {
+	for i := range fields {
 
-		f_num := cnt_drops(0, field[i])
-		blu_num := cnt_drops(1, field[i])
-		g_num := cnt_drops(2, field[i])
-		l_num := cnt_drops(3, field[i])
-		bla_num := cnt_drops(4, field[i])
-		r_num := cnt_drops(5, field[i])
+		f_num := cnt_drops(0, fields[i])
+		blu_num := cnt_drops(1, fields[i])
+		g_num := cnt_drops(2, fields[i])
+		l_num := cnt_drops(3, fields[i])
+		bla_num := cnt_drops(4, fields[i])
+		r_num := cnt_drops(5, fields[i])
 
 		if fn(f_num, blu_num, g_num, l_num, bla_num, r_num) {
 			num_ok++
