@@ -129,6 +129,16 @@ func main() {
 	print_prob(num_ok, num_ng, "14コンボ以上ある確率", x_range, y_range)
 
 	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/4)+(b/4)+(g/4)+(l/4)+(d/4)+(r/4) >= 5
+	}, field)
+	print_prob(num_ok, num_ng, "(4個消しで)5コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return (f/4)+(b/4)+(g/4)+(l/4)+(d/4)+(r/4) >= 6
+	}, field)
+	print_prob(num_ok, num_ng, "(4個消しで)6コンボ以上ある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
 		return (f/4)+(b/4)+(g/4)+(l/4)+(d/4)+(r/4) >= 7
 	}, field)
 	print_prob(num_ok, num_ng, "(4個消しで)7コンボ以上ある確率", x_range, y_range)
