@@ -214,6 +214,8 @@ func cnt_drops(target_drop int, drops [][]int) int {
 	return total
 }
 
+// 盤面の配列に対して、指定したbool式に一致する盤面、一致しない盤面の数を返します
+//
 func monte_carlo_freq(fn func(fire_drops_num int, blue_drops_num int, green_drops_num int,
 	light_drops_num int, black_drops_num int, recovery_drops_num int) bool, fields [][][]int) (int, int) {
 
@@ -241,6 +243,8 @@ func monte_carlo_freq(fn func(fire_drops_num int, blue_drops_num int, green_drop
 
 }
 
+// loop_cntの数だけランダムなパズドラ盤面の生成を試みます。
+// 3つ以上ドロップがつながっている盤面は破棄され、つながっていない盤面のみ保持されます
 func generate_fields(x_range int, y_range int, loop_cnt int) [][][]int {
 
 	field := make([][][]int, 0, loop_cnt/2)
