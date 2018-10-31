@@ -1,5 +1,5 @@
-from numpy.random import *
 from itertools import chain
+from random import randint
 
 def check_normal_drops (drops):
     ## ドロップが3つ以上つながっているかどうかをチェックする
@@ -9,7 +9,7 @@ def check_normal_drops (drops):
             if idx_j + 2 < len(val_i):
                 if val_j == val_i[idx_j + 1] and val_i[idx_j + 1] == val_i[idx_j + 2]:
                     return False
-            
+
             if idx_i + 2 < len(drops):
                 if val_j == drops[idx_i + 1][idx_j] and val_j == drops[idx_i + 2][idx_j]:
                     return False
@@ -17,7 +17,7 @@ def check_normal_drops (drops):
     return True
 
 def generate_drops(height, width):
-    return randint(0,6,(height,width))
+    return [[randint(0, 5) for _ in range(width)] for _ in range(height)]
 
 ##============= カスタムフィールド==============##
 
@@ -56,7 +56,6 @@ def monte_carlo_freq(lack_cond,fields):
     return num_ok, num_ng
 
 def generate_fields():
-
     fields = []
 
     for x in range(loop_cnt):
