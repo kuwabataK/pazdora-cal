@@ -1,11 +1,10 @@
 from itertools import chain
 from random import randint
-from joblib import Parallel, delayed
 
 # ============= カスタムフィールド==============##
 
 # 試行回数を指定
-loop_cnt = 100000
+loop_cnt = 1000000
 
 # 盤面を指定
 height = 5
@@ -49,19 +48,18 @@ def monte_carlo_freq(lack_cond, fields):
             num_ng = num_ng + 1
     return num_ok, num_ng
 
-def generate_field():
-    drops = generate_drops(height, width)
-    if not check_normal_drops(drops):
-        return []
-    drops = list(chain.from_iterable(drops))
-    return [drops.count(0),drops.count(1),drops.count(2),drops.count(3),drops.count(4),drops.count(5)]
-
 
 def generate_fields():
+    fields = []
 
-    r = Parallel(n_jobs=-1)( [delayed(generate_field)() for i in range(loop_cnt)] )
-    return list(filter(lambda x: len(x) != 0, r))
+    for x in range(loop_cnt):
+        drops = generate_drops(height, width)
+        if not check_normal_drops(drops):
+            continue
 
+        drops = list(chain.from_iterable(drops))
+        fields.append([drops.count(0),drops.count(1),drops.count(2),drops.count(3),drops.count(4),drops.count(5),])
+    return fields
 
 
 # 試行回数、OKの回数、NGの回数、確率を出力する
