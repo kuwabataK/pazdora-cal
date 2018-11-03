@@ -4,7 +4,7 @@ from random import randint
 # ============= カスタムフィールド==============##
 
 # 試行回数を指定
-loop_cnt = 1000000
+loop_cnt = 100000
 
 # 盤面を指定
 height = 5
