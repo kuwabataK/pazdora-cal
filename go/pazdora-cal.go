@@ -158,6 +158,12 @@ func main() {
 	}, field)
 	print_prob(num_ok, num_ng, "(4個消しで)10コンボ以上ある確率", x_range, y_range)
 
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		array := []int{b, g, l, d, r}
+		sort.Ints(array)
+		return f >= 4 && array[4] >= 5
+	}, field)
+	print_prob(num_ok, num_ng, "指定一色が４つ以上あり、指定色以外が５個以上ある確率(ユウキ（SAO）)", x_range, y_range)
 }
 
 // 引数に指定したドロップたちが3つ以上つながっていないことを確認
@@ -248,14 +254,14 @@ func generate_fields(x_range int, y_range int, loop_cnt int) [][]int {
 			continue
 		}
 
-		f := cnt_drops(0,drops)
-		b := cnt_drops(1,drops)
-		g := cnt_drops(2,drops)
-		l := cnt_drops(3,drops)
-		d := cnt_drops(4,drops)
-		r := cnt_drops(5,drops)
+		f := cnt_drops(0, drops)
+		b := cnt_drops(1, drops)
+		g := cnt_drops(2, drops)
+		l := cnt_drops(3, drops)
+		d := cnt_drops(4, drops)
+		r := cnt_drops(5, drops)
 
-		do := []int{f,b,g,l,d,r}
+		do := []int{f, b, g, l, d, r}
 
 		field = append(field, do)
 	}
