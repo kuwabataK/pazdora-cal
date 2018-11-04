@@ -22,3 +22,29 @@ sys     0m0.064s
 real    0m4.280s
 user    0m11.407s
 sys     0m0.356s
+
+2回め
+
+real    1m3.468s
+user    1m3.212s
+sys     0m0.322s
+
+real    1m6.225s
+user    1m6.169s
+sys     0m0.105s
+
+real    0m23.541s
+user    0m23.537s
+sys     0m0.093s
+
+real    0m6.936s
+user    0m6.878s
+sys     0m0.044s
+
+real    0m4.787s
+user    0m4.735s
+sys     0m0.040s
+
+real    0m4.014s
+user    0m11.457s
+sys     0m0.320s
