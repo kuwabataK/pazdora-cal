@@ -36,6 +36,11 @@ func main() {
 	print_prob(num_ok, num_ng, "指定2色がある確率", x_range, y_range)
 
 	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		return f >= 3 && d >= 3 && g >= 3
+	}, field)
+	print_prob(num_ok, num_ng, "指定3色がある確率", x_range, y_range)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
 		array := []int{f, b, g, l, d, r}
 		sort.Ints(array)
 		return array[1] >= 3
