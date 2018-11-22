@@ -33,26 +33,14 @@ def generate_drops(height, width):
 
 # 指定した欠損条件に対して、モンテカルロ法により、欠損しなかった回数と欠損した回数の組を返す
 def monte_carlo_freq(lack_cond, fields):
-    num_ok = 0
-    num_ng = 0
-    for drops in fields:
-
-        if not lack_cond(
-                drops[0],
-                drops[1],
-                drops[2],
-                drops[3],
-                drops[4],
-                drops[5]):
-            num_ok = num_ok + 1
-        else:
-            num_ng = num_ng + 1
+    num_ng = sum(lack_cond(*drops) for drops in fields)
+    num_ok = len(fields) - num_ng
     return num_ok, num_ng
 
 def generate_field():
     drops = generate_drops(height, width)
     if not check_normal_drops(drops):
-        return []
+        return None
     drops = list(chain.from_iterable(drops))
     return [drops.count(0),drops.count(1),drops.count(2),drops.count(3),drops.count(4),drops.count(5)]
 
@@ -60,9 +48,7 @@ def generate_field():
 def generate_fields():
 
     r = Parallel(n_jobs=-1)( [delayed(generate_field)() for i in range(loop_cnt)] )
-    return list(filter(lambda x: len(x) != 0, r))
-
-
+    return [x for x in r if x]
 
 # 試行回数、OKの回数、NGの回数、確率を出力する
 def print_prob(num_ok, num_ng):
