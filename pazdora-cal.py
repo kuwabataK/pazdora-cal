@@ -2,6 +2,7 @@ from itertools import chain
 from random import randint
 from joblib import Parallel, delayed
 from numba import jit
+# from numpy.random import *
 
 # ============= カスタムフィールド==============##
 
@@ -29,6 +30,7 @@ def check_normal_drops(drops):
 
 @jit
 def generate_drops(height, width):
+    # return randint(0,6,(height,width))
     return [[randint(0, 5) for _ in range(width)] for _ in range(height)]
 
 

@@ -1,5 +1,6 @@
 from itertools import chain
-from random import randint
+# from random import randint
+from numpy.random import *
 
 # ============= カスタムフィールド==============##
 
@@ -27,7 +28,7 @@ def check_normal_drops(drops):
 
 
 def generate_drops(height, width):
-    return [[randint(0, 5) for _ in range(width)] for _ in range(height)]
+    return [[randint(0, 6) for _ in range(width)] for _ in range(height)]
 
 
 # 指定した欠損条件に対して、モンテカルロ法により、欠損しなかった回数と欠損した回数の組を返す
