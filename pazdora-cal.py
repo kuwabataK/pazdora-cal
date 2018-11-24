@@ -43,14 +43,14 @@ def monte_carlo_freq(lack_cond, fields):
 def generate_field():
     drops = generate_drops(height, width)
     if not check_normal_drops(drops):
-        return None
+        return []
     drops = list(chain.from_iterable(drops))
     return [drops.count(0),drops.count(1),drops.count(2),drops.count(3),drops.count(4),drops.count(5)]
 
 def generate_fields():
     # r = Parallel(n_jobs=-1)( [delayed(generate_field)() for i in range(loop_cnt)] )
     r = [ generate_field() for i in range(loop_cnt)]
-    return [x for x in r if x]
+    return [x for x in r if x != []]
 
 # 試行回数、OKの回数、NGの回数、確率を出力する
 def print_prob(num_ok, num_ng):
