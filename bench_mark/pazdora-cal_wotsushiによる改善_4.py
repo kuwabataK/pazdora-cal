@@ -1,8 +1,6 @@
 from itertools import chain
-from random import randint
-from joblib import Parallel, delayed
-from numba import jit
-# from numpy.random import *
+# from random import randint
+from numpy.random import *
 
 # ============= カスタムフィールド==============##
 
@@ -14,6 +12,7 @@ height = 5
 width = 6
 
 # =============================================##
+
 
 def check_normal_drops(drops):
     # ドロップが3つ以上つながっているかどうかをチェックする
@@ -27,29 +26,49 @@ def check_normal_drops(drops):
                     return False
     return True
 
-@jit(nopython=True,parallel=True)
+
 def generate_drops(height, width):
-    # return randint(0,6,(height,width))
-    return [[randint(0, 5) for _ in range(width)] for _ in range(height)]
+    return [[randint(0, 6) for _ in range(width)] for _ in range(height)]
 
 
 # 指定した欠損条件に対して、モンテカルロ法により、欠損しなかった回数と欠損した回数の組を返す
 def monte_carlo_freq(lack_cond, fields):
-    num_ng = sum(lack_cond(*drops) for drops in fields)
-    num_ok = len(fields) - num_ng
+    num_ok = 0
+    num_ng = 0
+    for drops in fields:
+
+        fire_drops_num = drops.count(0)
+        blue_drops_num = drops.count(1)
+        green_drops_num = drops.count(2)
+        light_drops_num = drops.count(3)
+        black_drops_num = drops.count(4)
+        recovery_drops_num = drops.count(5)
+
+        if not lack_cond(
+                fire_drops_num,
+                blue_drops_num,
+                green_drops_num,
+                light_drops_num,
+                black_drops_num,
+                recovery_drops_num):
+            num_ok = num_ok + 1
+        else:
+            num_ng = num_ng + 1
     return num_ok, num_ng
 
-def generate_field():
-    drops = generate_drops(height, width)
-    if not check_normal_drops(drops):
-        return []
-    drops = list(chain.from_iterable(drops))
-    return [drops.count(0),drops.count(1),drops.count(2),drops.count(3),drops.count(4),drops.count(5)]
 
 def generate_fields():
-    # r = Parallel(n_jobs=-1)( [delayed(generate_field)() for i in range(loop_cnt)] )
-    r = [ generate_field() for i in range(loop_cnt)]
-    return [x for x in r if x != []]
+    fields = []
+
+    for x in range(loop_cnt):
+        drops = generate_drops(height, width)
+        if not check_normal_drops(drops):
+            continue
+
+        drops = list(chain.from_iterable(drops))
+        fields.append(drops)
+    return fields
+
 
 # 試行回数、OKの回数、NGの回数、確率を出力する
 def print_prob(num_ok, num_ng):

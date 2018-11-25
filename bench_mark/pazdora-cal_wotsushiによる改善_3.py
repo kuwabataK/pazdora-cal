@@ -37,12 +37,12 @@ def monte_carlo_freq(lack_cond, fields):
     num_ng = 0
     for drops in fields:
 
-        fire_drops_num = drops.count(0)
-        blue_drops_num = drops.count(1)
-        green_drops_num = drops.count(2)
-        light_drops_num = drops.count(3)
-        black_drops_num = drops.count(4)
-        recovery_drops_num = drops.count(5)
+        fire_drops_num = len([i for i in drops if i == 0])
+        blue_drops_num = len([i for i in drops if i == 1])
+        green_drops_num = len([i for i in drops if i == 2])
+        light_drops_num = len([i for i in drops if i == 3])
+        black_drops_num = len([i for i in drops if i == 4])
+        recovery_drops_num = len([i for i in drops if i == 5])
 
         if not lack_cond(
                 fire_drops_num,
@@ -51,9 +51,9 @@ def monte_carlo_freq(lack_cond, fields):
                 light_drops_num,
                 black_drops_num,
                 recovery_drops_num):
-            num_ok = num_ok + 1
+            num_ok = num_ok +1
         else:
-            num_ng = num_ng + 1
+            num_ng = num_ng +1
     return num_ok, num_ng
 
 
