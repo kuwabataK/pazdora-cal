@@ -31,7 +31,7 @@ def filter_drops(fields):
 
     
 
-@jit
+# @jit
 def generate_drops(height, width,loop_cnt):
     return randint(1,7,(loop_cnt,height,width))
     # return [[randint(0, 5) for _ in range(width)] for _ in range(height)]
