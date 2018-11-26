@@ -1,8 +1,9 @@
 from itertools import chain
-from random import randint
+# from random import randint
 from joblib import Parallel, delayed
 from numba import jit
-# from numpy.random import *
+from numpy.random import *
+import numpy as np
 
 # ============= カスタムフィールド==============##
 
@@ -15,41 +16,46 @@ width = 6
 
 # =============================================##
 
-def check_normal_drops(drops):
+def filter_drops(fields):
     # ドロップが3つ以上つながっているかどうかをチェックする
-    for idx_i, val_i in enumerate(drops):
-        for idx_j, val_j in enumerate(val_i):
-            if idx_j + 2 < len(val_i):
-                if val_j == val_i[idx_j + 1] == val_i[idx_j + 2]:
-                    return False
-            if idx_i + 2 < len(drops):
-                if val_j == drops[idx_i + 1][idx_j] == drops[idx_i + 2][idx_j]:
-                    return False
-    return True
+    diff1 = np.roll(fields,1,axis=2) - fields
+    diff2 = np.roll(fields,-1,axis=2) - fields
+    diff3 = (100 * diff1[:,:,1:-1]) - diff2[:,:,1:-1]
+    # if np.sum(diff3 == 0) != 0:
 
-@jit(nopython=True,parallel=True)
-def generate_drops(height, width):
-    # return randint(0,6,(height,width))
-    return [[randint(0, 5) for _ in range(width)] for _ in range(height)]
+    diff4 = np.roll(fields,1,axis=1) - fields
+    diff5 = np.roll(fields,-1,axis=1) - fields
+    diff6 = (100 * diff4[:,1:-1]) - diff5[:,1:-1]
+    b = np.all(np.all(diff3 != 0, axis=1),axis=1).astype(int) * np.all(np.all(diff6 != 0, axis=1) == True,axis=1).astype(int)
+    return fields[b.astype(bool)]
+
+    
+
+@jit
+def generate_drops(height, width,loop_cnt):
+    return randint(1,7,(loop_cnt,height,width))
+    # return [[randint(0, 5) for _ in range(width)] for _ in range(height)]
 
 
 # 指定した欠損条件に対して、モンテカルロ法により、欠損しなかった回数と欠損した回数の組を返す
+
 def monte_carlo_freq(lack_cond, fields):
     num_ng = sum(lack_cond(*drops) for drops in fields)
     num_ok = len(fields) - num_ng
     return num_ok, num_ng
 
-def generate_field():
-    drops = generate_drops(height, width)
-    if not check_normal_drops(drops):
-        return []
-    drops = list(chain.from_iterable(drops))
-    return [drops.count(0),drops.count(1),drops.count(2),drops.count(3),drops.count(4),drops.count(5)]
-
 def generate_fields():
-    # r = Parallel(n_jobs=-1)( [delayed(generate_field)() for i in range(loop_cnt)] )
-    r = [ generate_field() for i in range(loop_cnt)]
-    return [x for x in r if x != []]
+    drops = generate_drops(height, width,loop_cnt)
+    drops = filter_drops(drops)
+
+    cnt1 = np.sum(drops == 1, axis=(1,2))
+    cnt2 = np.sum(drops == 2, axis=(1,2))
+    cnt3 = np.sum(drops == 3, axis=(1,2))
+    cnt4 = np.sum(drops == 4, axis=(1,2))
+    cnt5 = np.sum(drops == 5, axis=(1,2))
+    cnt6 = np.sum(drops == 6, axis=(1,2))
+    return np.array([cnt1,cnt2,cnt3,cnt4,cnt5,cnt6]).T.tolist()
+    
 
 # 試行回数、OKの回数、NGの回数、確率を出力する
 def print_prob(num_ok, num_ng):
@@ -59,10 +65,10 @@ def print_prob(num_ok, num_ng):
     print("確率は" + str(num_ok/(num_ok + num_ng) * 100))
 
 
-drops = generate_drops(height, width)
-while not check_normal_drops(drops):
-    drops = generate_drops(height, width)
-print(drops)
+# drops = generate_drops(height, width)
+# while not check_normal_drops(drops):
+#     drops = generate_drops(height, width)
+# print(drops)
 
 print("総試行回数は" + str(loop_cnt) + "回")
 
