@@ -15,7 +15,7 @@ func main() {
 
 	x := flag.Int("x", 5, "盤面の縦方向の大きさ")
 	y := flag.Int("y", 6, "盤面の横方向の大きさ")
-	l := flag.Int("loopCnt", 100000, "ループする回数")
+	l := flag.Int("loopCnt", 1000000, "ループする回数")
 	flag.Parse()
 	x_range := *x
 	y_range := *y
@@ -24,6 +24,41 @@ func main() {
 	num_ok, num_ng := 0, 0
 
 	field := generate_fields(x_range, y_range, loop_cnt)
+
+	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
+		if (f/3)+(b/3)+(g/3)+(l/3)+(d/3)+(r/3) >= 8 {
+			return true
+		}
+
+		if (f/3)+(b/3)+(g/3)+(l/3)+(d/3)+(r/3) <= 6 {
+			return false
+		}
+
+		drops := []int{f, b, g, l, d, r}
+
+		if contains(drops, 5) {
+			return true
+		}
+		if contains(drops, 8) {
+			return true
+		}
+		if contains(drops, 11) {
+			return true
+		}
+		if contains(drops, 14) {
+			return true
+		}
+		if contains(drops, 17) {
+			return true
+		}
+		if contains(drops, 20) {
+			return true
+		}
+
+		return false
+
+	}, field)
+	print_prob(num_ok, num_ng, "5子消し７コンボある確率", x_range, y_range)
 
 	num_ok, num_ng = monte_carlo_freq(func(f int, b int, g int, l int, d int, r int) bool {
 		return f >= 5 || d >= 5
@@ -285,4 +320,13 @@ func print_prob(num_ok int, num_ng int, message string, x int, y int) {
 	fmt.Println("失敗した回数は" + strconv.Itoa(num_ng))
 	kakuritu := float64(num_ok) / float64(num_ng+num_ok) * 100
 	fmt.Println("確率は" + strconv.FormatFloat(kakuritu, 'f', 10, 64))
+}
+
+func contains(s []int, e int) bool {
+	for _, v := range s {
+		if e == v {
+			return true
+		}
+	}
+	return false
 }
